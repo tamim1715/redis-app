@@ -74,7 +74,7 @@ func (e CacheControllerInstance) Delete(c echo.Context) error {
 		err := rds.GetRedisMaster().Del(context.Background(), params.Get("key"))
 		if err != nil {
 			log.Println("key deletion failed")
-			return c.JSON(http.StatusInternalServerError, errors.New("key update failed: "+err.String()))
+			return c.JSON(http.StatusBadRequest, errors.New("key update failed: "+err.String()))
 		}
 	}
 	return c.JSON(http.StatusOK, nil)
