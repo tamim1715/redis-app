@@ -14,7 +14,7 @@ func main() {
 	router.Routes(srv)
 	err := rds.InitRedisMaster()
 	if err != nil {
-		log.Errorf(err.Error())
+		log.Fatal("database error")
 		return
 	}
 	srv.Logger.Fatal(srv.Start(":" + config.ServerPort))
