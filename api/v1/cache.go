@@ -28,10 +28,10 @@ func CacheController() CacheControllerInf {
 func (e CacheControllerInstance) Create(c echo.Context) error {
 	var input dto.RedisObject
 	if err := c.Bind(&input); err != nil {
-		log.Println("input error")
+		log.Println("input error: ", err.Error())
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	err := rds.GetRedisMaster().Set(context.Background(), input.Key, &input.Value, 0)
+	err := rds.GetRedisMaster().Set(context.Background(), input.Key, input.Value, 0)
 	if err != nil {
 		log.Println("database error: ", err.Err())
 		return c.JSON(http.StatusInternalServerError, err.Err())
@@ -43,7 +43,7 @@ func (e CacheControllerInstance) Update(c echo.Context) error {
 
 	var input dto.RedisObject
 	if err := c.Bind(&input); err != nil {
-		log.Println("input error")
+		log.Println("input error: ", err.Error())
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	_, rdsErr := rds.GetRedisMaster().Get(context.Background(), input.Key).Result()
@@ -92,6 +92,6 @@ func (e CacheControllerInstance) Get(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, errors.New("key not found"))
 	}
 
-	respObj := dto.RedisObject{params.Get("key"), value}
+	respObj := dto.RedisObject{Key: params.Get("key"), Value: value}
 	return c.JSON(http.StatusOK, respObj)
 }
