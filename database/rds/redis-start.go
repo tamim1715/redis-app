@@ -1,4 +1,4 @@
-package redis
+package rds
 
 import (
 	"context"
@@ -6,9 +6,11 @@ import (
 	"github.com/khan1507017/redis-app/config"
 )
 
-func InitRedis() error {
+var rdb *redis.Client
+
+func InitRedisMaster() error {
 	ctx := context.Background()
-	rdb := redis.NewClient(&redis.Options{
+	rdb = redis.NewClient(&redis.Options{
 		Addr:     config.RedisMasterEndpoint + ":" + config.RedisPort,
 		Password: config.RedisPassword, // no password set
 		DB:       0,                    // use default DB
@@ -20,4 +22,7 @@ func InitRedis() error {
 		rdb.Del(ctx, "key")
 	}
 	return nil
+}
+func GetRedisMaster() *redis.Client {
+	return rdb
 }

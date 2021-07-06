@@ -1,7 +1,14 @@
 package v1
 
 import (
+	"context"
+	"errors"
+	"github.com/go-redis/redis/v8"
+	"github.com/khan1507017/redis-app/database/rds"
+	"github.com/khan1507017/redis-app/dto"
 	"github.com/labstack/echo/v4"
+	"log"
+	"net/http"
 )
 
 type CacheControllerInf interface {
@@ -19,17 +26,72 @@ func CacheController() CacheControllerInf {
 }
 
 func (e CacheControllerInstance) Create(c echo.Context) error {
-	panic("implement me")
+	var input dto.RedisObject
+	if err := c.Bind(&input); err != nil {
+		log.Println("input error")
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	err := rds.GetRedisMaster().Set(context.Background(), input.Key, &input.Value, 0)
+	if err != nil {
+		log.Println("database error: ", err.Err())
+		return c.JSON(http.StatusInternalServerError, err.Err())
+	}
+	return c.JSON(http.StatusOK, "successfully added")
 }
 
 func (e CacheControllerInstance) Update(c echo.Context) error {
-	panic("implement me")
+
+	var input dto.RedisObject
+	if err := c.Bind(&input); err != nil {
+		log.Println("input error")
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	_, rdsErr := rds.GetRedisMaster().Get(context.Background(), input.Key).Result()
+	if rdsErr == redis.Nil {
+		log.Println("key not found")
+		return c.JSON(http.StatusBadRequest, errors.New("key not found"))
+	} else {
+		err := rds.GetRedisMaster().Set(context.Background(), input.Key, input.Value, 0)
+		if err != nil {
+			log.Println("key update failed")
+			return c.JSON(http.StatusInternalServerError, errors.New("key update failed: "+err.String()))
+		}
+	}
+	return c.JSON(http.StatusOK, nil)
 }
 
 func (e CacheControllerInstance) Delete(c echo.Context) error {
-	panic("implement me")
+	params := c.QueryParams()
+	if params.Get("key") == "" {
+		log.Println("key not found in params")
+		return c.JSON(http.StatusBadRequest, errors.New("key missing in query param"))
+	}
+	_, rdsErr := rds.GetRedisMaster().Get(context.Background(), params.Get("key")).Result()
+	if rdsErr == redis.Nil {
+		log.Println("key not found")
+		return c.JSON(http.StatusBadRequest, errors.New("key not found"))
+	} else {
+		err := rds.GetRedisMaster().Del(context.Background(), params.Get("key"))
+		if err != nil {
+			log.Println("key deletion failed")
+			return c.JSON(http.StatusInternalServerError, errors.New("key update failed: "+err.String()))
+		}
+	}
+	return c.JSON(http.StatusOK, nil)
 }
 
 func (e CacheControllerInstance) Get(c echo.Context) error {
-	panic("implement me")
+	params := c.QueryParams()
+	if params.Get("key") == "" {
+		log.Println("key not found in params")
+		return c.JSON(http.StatusBadRequest, errors.New("key missing in query param"))
+	}
+	value, rdsErr := rds.GetRedisMaster().Get(context.Background(), params.Get("key")).Result()
+	if rdsErr == redis.Nil {
+		log.Println("key not found")
+		return c.JSON(http.StatusBadRequest, errors.New("key not found"))
+	}
+
+	respObj := dto.RedisObject{params.Get("key"), value}
+	return c.JSON(http.StatusOK, respObj)
 }
