@@ -81,7 +81,7 @@ func (e CacheControllerInstance) Delete(c echo.Context) error {
 		}
 	}
 
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, "successfully deleted")
 }
 
 func (e CacheControllerInstance) Get(c echo.Context) error {
