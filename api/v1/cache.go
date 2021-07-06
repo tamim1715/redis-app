@@ -31,8 +31,8 @@ func (e CacheControllerInstance) Create(c echo.Context) error {
 		log.Println("input error: ", err.Error())
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	_, rdsErr := rds.GetRedisMaster().Set(context.Background(), input.Key, input.Value, 0).Result()
-	if rdsErr != redis.Nil {
+	rdsErr := rds.GetRedisMaster().Set(context.Background(), input.Key, input.Value, 0).Err()
+	if rdsErr != nil {
 		log.Println("database error: ", rdsErr.Error())
 		return c.JSON(http.StatusInternalServerError, rdsErr.Error())
 	}
@@ -50,6 +50,9 @@ func (e CacheControllerInstance) Update(c echo.Context) error {
 	if rdsErr == redis.Nil {
 		log.Println("key not found")
 		return c.JSON(http.StatusBadRequest, errors.New("key not found"))
+	} else if rdsErr != nil {
+		log.Println("database error: ", rdsErr.Error())
+		return c.JSON(http.StatusInternalServerError, rdsErr.Error())
 	} else {
 		err := rds.GetRedisMaster().Set(context.Background(), input.Key, input.Value, 0)
 		if err != nil {
