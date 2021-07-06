@@ -20,7 +20,7 @@ WORKDIR /home/klovercloud
 COPY --from=builder /app/bin .
 
 
-EXPOSE 8080
+EXPOSE 4040
 
 USER klovercloud
 CMD ["./go"]
