@@ -1,6 +1,9 @@
 package v1
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+	"net/http"
+)
 
 type CacheControllerInf interface {
 	Create(c echo.Context) error
@@ -29,5 +32,6 @@ func (e CacheControllerInstance) Delete(c echo.Context) error {
 }
 
 func (e CacheControllerInstance) Get(c echo.Context) error {
-	panic("implement me")
+	return c.JSON(http.StatusOK, "milimeter")
+	//panic("implement me")
 }
