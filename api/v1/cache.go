@@ -88,7 +88,7 @@ func (e CacheControllerInstance) Get(c echo.Context) error {
 	params := c.QueryParams()
 	if params.Get("key") == "" {
 		log.Println("key not found in params")
-		return c.JSON(http.StatusBadRequest, errors.New("key missing in query param"))
+		return c.JSON(http.StatusBadRequest, "key missing in query param")
 	}
 	value, rdsErr := rds.GetRedisMaster().Get(context.Background(), params.Get("key")).Result()
 	if rdsErr == redis.Nil {
