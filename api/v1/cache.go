@@ -2,7 +2,6 @@ package v1
 
 import (
 	"context"
-	"errors"
 	"github.com/go-redis/redis/v8"
 	"github.com/khan1507017/redis-app/database/rds"
 	"github.com/khan1507017/redis-app/dto"
@@ -49,15 +48,15 @@ func (e CacheControllerInstance) Update(c echo.Context) error {
 	_, rdsErr := rds.GetRedisMaster().Get(context.Background(), input.Key).Result()
 	if rdsErr == redis.Nil {
 		log.Println("key not found")
-		return c.JSON(http.StatusBadRequest, errors.New("key not found"))
+		return c.JSON(http.StatusBadRequest, "key not found")
 	} else if rdsErr != nil {
 		log.Println("database error: ", rdsErr.Error())
 		return c.JSON(http.StatusInternalServerError, rdsErr.Error())
 	} else {
-		err := rds.GetRedisMaster().Set(context.Background(), input.Key, input.Value, 0)
+		err := rds.GetRedisMaster().Set(context.Background(), input.Key, input.Value, 0).Err()
 		if err != nil {
-			log.Println("key update failed")
-			return c.JSON(http.StatusInternalServerError, errors.New("key update failed: "+err.String()))
+			log.Println("key update failed: ", err.Error())
+			return c.JSON(http.StatusInternalServerError, "key update failed")
 		}
 	}
 	return c.JSON(http.StatusOK, nil)
