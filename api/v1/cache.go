@@ -59,7 +59,7 @@ func (e CacheControllerInstance) Update(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, "key update failed")
 		}
 	}
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, "key updated successfully")
 }
 
 func (e CacheControllerInstance) Delete(c echo.Context) error {
