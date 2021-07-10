@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func V1_routes(group *echo.Group) {
+func V1Routes(group *echo.Group) {
 	group.POST("/cache", v1.CacheController().Create)
 	group.GET("/cache", v1.CacheController().Get)
 	group.PUT("/cache", v1.CacheController().Update)
