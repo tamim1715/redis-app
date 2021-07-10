@@ -5,6 +5,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/khan1507017/redis-app/database/rds"
 	"github.com/khan1507017/redis-app/dto"
+	"github.com/khan1507017/redis-app/utils"
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
@@ -30,6 +31,12 @@ func (e CacheControllerInstance) Create(c echo.Context) error {
 		log.Println("input error: ", err.Error())
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
+	utils.TrimSpaces(&input.Key)
+	utils.TrimSpaces(&input.Value)
+	if !utils.DtoValidation(&input) {
+		log.Println("json invalid")
+		return c.JSON(http.StatusBadRequest, "key and/or value is null")
+	}
 	rdsErr := rds.GetRedisMaster().Set(context.Background(), input.Key, input.Value, 0).Err()
 	if rdsErr != nil {
 		log.Println("database error: ", rdsErr.Error())
@@ -44,6 +51,12 @@ func (e CacheControllerInstance) Update(c echo.Context) error {
 	if err := c.Bind(&input); err != nil {
 		log.Println("input error: ", err.Error())
 		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	utils.TrimSpaces(&input.Key)
+	utils.TrimSpaces(&input.Value)
+	if !utils.DtoValidation(&input) {
+		log.Println("json invalid")
+		return c.JSON(http.StatusBadRequest, "key and/or value is null")
 	}
 	_, rdsErr := rds.GetRedisMaster().Get(context.Background(), input.Key).Result()
 	if rdsErr == redis.Nil {
