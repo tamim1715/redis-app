@@ -12,10 +12,13 @@ func main() {
 
 	srv := server.New()
 	router.Routes(srv)
-	err := rds.InitRedisMaster()
+	err := config.InitEnvironmentVariables()
+	if err != nil {
+		log.Fatal("envVars error: " + err.Error())
+	}
+	err = rds.InitRedisMaster()
 	if err != nil {
 		log.Fatal("database error: " + err.Error())
 	}
 	srv.Logger.Fatal(srv.Start(":" + config.ServerPort))
-	defer log.Fatal("Server died")
 }
