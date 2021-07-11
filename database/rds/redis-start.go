@@ -2,6 +2,7 @@ package rds
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/khan1507017/redis-app/config"
@@ -41,12 +42,8 @@ func InitRedisSlave() error {
 			Password: config.RedisPassword,
 			DB:       0,
 		})
-		err := slave[i].Set(ctx, "key", "value", 0).Err()
-		if err != nil {
-			log.Println("Database Connection Error: ", err.Error())
-			return err
-		} else {
-			slave[i].Del(ctx, "key")
+		if err := slave[i].Ping(ctx).Err(); err != nil {
+			return errors.New("error connecting slave: " + strconv.Itoa(i))
 		}
 	}
 	fmt.Println("slave instance loaded: " + strconv.Itoa(config.RedisSlaveCount))
