@@ -18,8 +18,8 @@ func InitRedisMaster() error {
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*time.Duration(5))
 	master = redis.NewClient(&redis.Options{
 		Addr:     config.RedisMasterEndpoint + ":" + config.RedisPort,
-		Password: config.RedisPassword, // no password set
-		DB:       0,                    // use default DB
+		Password: config.RedisPassword,
+		DB:       0,
 	})
 	err := master.Set(ctx, "key", "value", 0).Err()
 	if err != nil {
@@ -35,8 +35,8 @@ func InitRedisSlave() error {
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*time.Duration(5))
 		slave[i] = redis.NewClient(&redis.Options{
 			Addr:     config.RedisSlaveEndpoints[i] + ":" + config.RedisPort,
-			Password: config.RedisPassword, // no password set
-			DB:       0,                    // use default DB
+			Password: config.RedisPassword,
+			DB:       0,
 		})
 		err := slave[i].Set(ctx, "key", "value", 0).Err()
 		if err != nil {

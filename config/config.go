@@ -42,7 +42,7 @@ func InitEnvironmentVariables() error {
 	return nil
 }
 func initSlaveEndpoints() error {
-	slaveCountTemp, boolVal = os.LookupEnv("REDIS_SLAVE_COUNT")
+	slaveCountTemp, boolVal = os.LookupEnv("SLAVE_COUNT")
 	if boolVal == true {
 		RedisSlaveCount, err := strconv.Atoi(slaveCountTemp)
 		if err != nil {
