@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/khan1507017/redis-app/config"
-	"log"
 	"strconv"
 	"sync"
 	"time"
@@ -24,12 +23,8 @@ func InitRedisMaster() error {
 		Password: config.RedisPassword,
 		DB:       0,
 	})
-	err := master.Set(ctx, "key", "value", 0).Err()
-	if err != nil {
-		log.Println("Database Connection Error: ", err.Error())
-		return err
-	} else {
-		master.Del(ctx, "key")
+	if err := master.Ping(ctx).Err(); err != nil {
+		return errors.New("error connecting master")
 	}
 	fmt.Println("master instance loaded")
 	return nil
