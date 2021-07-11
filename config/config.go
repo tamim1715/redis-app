@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -17,10 +18,10 @@ var RedisPassword string
 var RedisMasterEndpoint string
 var RedisSlaveEndpoints [100]string
 var RedisSlaveCount int
-var slaveCountTemp string
 
 //temp variable
 var boolVal bool
+var slaveCountTemp string
 
 func InitEnvironmentVariables() error {
 
@@ -37,6 +38,7 @@ func InitEnvironmentVariables() error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("environment vars loaded")
 	return nil
 }
 func initSlaveEndpoints() error {

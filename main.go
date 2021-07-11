@@ -18,7 +18,11 @@ func main() {
 	}
 	err = rds.InitRedisMaster()
 	if err != nil {
-		log.Fatal("database error: " + err.Error())
+		log.Fatal("master endpoint error: " + err.Error())
+	}
+	err = rds.InitRedisSlave()
+	if err != nil {
+		log.Fatal("slave endpoint error: " + err.Error())
 	}
 	srv.Logger.Fatal(srv.Start(":" + config.ServerPort))
 }

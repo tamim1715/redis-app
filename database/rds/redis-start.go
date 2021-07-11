@@ -6,6 +6,7 @@ import (
 	"github.com/khan1507017/redis-app/config"
 	"log"
 	"sync"
+	"time"
 )
 
 var master *redis.Client
@@ -14,7 +15,7 @@ var count int = 0
 var mtx sync.Mutex
 
 func InitRedisMaster() error {
-	ctx := context.Background()
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*time.Duration(5))
 	master = redis.NewClient(&redis.Options{
 		Addr:     config.RedisMasterEndpoint + ":" + config.RedisPort,
 		Password: config.RedisPassword, // no password set
@@ -31,7 +32,7 @@ func InitRedisMaster() error {
 }
 func InitRedisSlave() error {
 	for i := 0; i < config.RedisSlaveCount; i++ {
-		ctx := context.Background()
+		ctx, _ := context.WithTimeout(context.Background(), time.Second*time.Duration(5))
 		slave[i] = redis.NewClient(&redis.Options{
 			Addr:     config.RedisSlaveEndpoints[i] + ":" + config.RedisPort,
 			Password: config.RedisPassword, // no password set
@@ -52,6 +53,9 @@ func GetRedisMaster() *redis.Client {
 	return master
 }
 func GetRedisSlave() *redis.Client {
+	if config.RedisSlaveCount == 0 {
+		return master
+	}
 	instance := slave[count]
 	mtx.Lock()
 	count++
