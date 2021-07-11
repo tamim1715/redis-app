@@ -53,7 +53,7 @@ https://your-application-prefix.eu-west-1.klovercloud.com/api/v1/cache
 ```json
 {
     "key"   : "klovercloud",
-    "value" : "awesome",
+    "value" : "awesome"
 }
 ```
 #### PUT
@@ -61,7 +61,7 @@ same as post. Oh, it checks if the key exist or not. Updating a key that isn't t
 ```json
 {
     "key"   : "klovercloud",
-    "value" : "moreAwesome",
+    "value" : "moreAwesome"
 }
 ```
 #### DELETE
