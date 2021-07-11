@@ -2,9 +2,11 @@ package rds
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/khan1507017/redis-app/config"
 	"log"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -28,6 +30,7 @@ func InitRedisMaster() error {
 	} else {
 		master.Del(ctx, "key")
 	}
+	fmt.Println("master instance loaded")
 	return nil
 }
 func InitRedisSlave() error {
@@ -46,6 +49,7 @@ func InitRedisSlave() error {
 			slave[i].Del(ctx, "key")
 		}
 	}
+	fmt.Println("slave instance loaded: " + strconv.Itoa(config.RedisSlaveCount))
 	return nil
 }
 
