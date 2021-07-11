@@ -61,7 +61,7 @@ same as post. Oh, it checks if the key exist or not. Updating a key that isn't t
 ```json
 {
     "key"   : "klovercloud",
-    "value" : "awesome",
+    "value" : "moreAwesome",
 }
 ```
 #### DELETE
