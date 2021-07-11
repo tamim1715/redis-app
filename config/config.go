@@ -16,7 +16,7 @@ const RedisPort = "6379"
 //envVars
 var RedisPassword string
 var RedisMasterEndpoint string
-var RedisSlaveEndpoints [100]string
+var RedisSlaveEndpoints [50]string
 var RedisSlaveCount int
 
 //temp variable
@@ -44,7 +44,8 @@ func InitEnvironmentVariables() error {
 func initSlaveEndpoints() error {
 	slaveCountTemp, boolVal = os.LookupEnv("SLAVE_COUNT")
 	if boolVal == true {
-		RedisSlaveCount, err := strconv.Atoi(slaveCountTemp)
+		var err error
+		RedisSlaveCount, err = strconv.Atoi(slaveCountTemp)
 		if err != nil {
 			return err
 		}

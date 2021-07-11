@@ -13,7 +13,7 @@ import (
 
 var master *redis.Client
 var slave [50]*redis.Client
-var count int = 0
+var count = 0
 var mtx sync.Mutex
 
 func InitRedisMaster() error {
