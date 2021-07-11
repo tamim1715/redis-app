@@ -8,9 +8,9 @@ The application established connection with each endpoint on redis endpoint. If 
 
 ## Deploying application and cache
 
-create a new vpc with enough resources to deploy the go application and redis server. Assuming you already have added personal access token of github/gitlab or your repo is public. OnBoard the application and edit the DockerFile as necessary, *e.g.* exposing the port the application is running.
+create a new vpc with enough resources to deploy the go application and redis server. Assuming you already have added personal access token of github/gitlab on klovercloud. OnBoard the application from the create new drop down bar and after that edit the DockerFile as necessary, *e.g.* exposing the port where application is running.
 
-Create a redis cache in the same vpc, and deploy the cache server. Yahoo! Nearly halfway there, with some mouse clicks right. No pesky terminal hassle. All we need to do is just inform the application about the cache server. The application already expecting one, so lets do it.
+Create a redis cache in the same vpc, and deploy the cache server. Yahoo! Nearly halfway there, with some mouse clicks right. No pesky terminal hassle. All we need to do is just inform the application about the cache serve. The application already expecting one, so lets do it.
 
 
 ## Secret information through environment variables
@@ -24,7 +24,7 @@ REDIS_PASSWORD    {your_cache_password}
 ## Instance information through environment variables
 When the application starts, it will look for the master endpoint from environment variable. And also look for slave instance count. If the slave instance is > 0, the application will try to load all the slave endpoints and will ping the slave instance. If it fails to get master / slave endpoints or ping returns error, the application will terminate with fatal error log. Add the environment variables as described below and double check. or what ? Your application will go on infinite crash loop (opps!)
 
-Go to the cache [cache](https://console.klovercloud.com/cache) section, select your cache, go to overview section and click to service endpoint to see all the endpoints list. Add them to environment variables as described below
+Go to the cache [cache](https://console.klovercloud.com/cache) section, select your cache, go to overview section and click to service endpoint to see all the endpoints list. Add them to environment variables as described below.
 
 ```
 KEY                VALUE
@@ -38,7 +38,7 @@ SLAVE_ENDPOINT_1   {second_slave_endpoint}
 .
 
 ```
-deploy your application on desired deployment environment. Make sure you added the environment variable and secrets in the right deployment environment. if you already deployed (and obviously its in crashloop!) re-deploy your application after adding environment variables and secrets. If deployment fails, the deployment logs should show the fatal log, its detailed enough to debug easily.
+deploy your application on desired deployment environment. Make sure you added the environment variable and secrets in the right deployment environment. if you already deployed (and obviously its in crashloop!), re-deploy your application after adding environment variables and secrets. If deployment fails, deployment logs should show the fatal log, its detailed enough to debug easily.
 ## REST endpoints
 #### GET
 From the CI/CD pipeline page, select the deployment, right click info. **External Default Endpoint** is your application url, so just add the path /api/v1/cache. and also add query param **key** or it will return error.
@@ -65,7 +65,7 @@ same as post. Oh, it checks if the key exist or not. Updating a key that isn't t
 }
 ```
 #### DELETE
-Same as the GET api. Provide key the query params.
+Same as the GET api. Provide key into the query params.
 ## Contributing
 Pull requests for new features, bug fixes, and suggestions are welcome!
 
