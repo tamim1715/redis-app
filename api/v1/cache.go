@@ -108,6 +108,6 @@ func (e CacheControllerInstance) Get(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "key not found")
 	}
 
-	respObj := dto.RedisObject{Key: params.Get("key"), Value: value + "kuet"}
+	respObj := dto.RedisObject{Key: params.Get("key"), Value: value + "kuet-cse"}
 	return c.JSON(http.StatusOK, respObj)
 }
