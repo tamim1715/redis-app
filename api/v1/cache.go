@@ -110,4 +110,4 @@ func (e CacheControllerInstance) Get(c echo.Context) error {
 
 	respObj := dto.RedisObject{Key: params.Get("key"), Value: value}
 	return c.JSON(http.StatusOK, respObj)
-}
+}}}
